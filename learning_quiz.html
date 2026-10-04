@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>亮亮精靈護眼小勇士大闖關 - 測驗與證書</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Noto+Sans+TC:wght@500;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-yellow: #FFD000;
+      --primary-cyan: #00E5FF;
+      --accent-green: #10B981;
+      --bg-gradient: linear-gradient(135deg, #1A1C29 0%, #0F2027 50%, #203A43 100%);
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Fredoka', 'Noto Sans TC', sans-serif;
+      background: var(--bg-gradient);
+      color: #FFFFFF;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .nav-bar {
+      width: 100%;
+      max-width: 900px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(10px);
+      padding: 12px 24px;
+      border-radius: 50px;
+      margin-bottom: 24px;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 16px;
+    }
+
+    .nav-btn {
+      color: white;
+      text-decoration: none;
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-weight: 700;
+      background: rgba(255,255,255,0.1);
+      transition: all 0.2s ease;
+    }
+
+    .nav-btn.active, .nav-btn:hover {
+      background: var(--primary-cyan);
+      color: #12131C;
+    }
+
+    .quiz-card {
+      width: 100%;
+      max-width: 800px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(16px);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 28px;
+      padding: 32px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    }
+
+    .q-title {
+      font-size: 1.4rem;
+      color: var(--primary-yellow);
+      margin-top: 0;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .option-btn {
+      background: rgba(255, 255, 255, 0.15);
+      border: 2px solid rgba(255, 255, 255, 0.25);
+      border-radius: 20px;
+      padding: 18px;
+      font-size: 1.1rem;
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: left;
+    }
+
+    .option-btn:hover {
+      background: rgba(255, 208, 0, 0.25);
+      border-color: var(--primary-yellow);
+      transform: translateY(-4px);
+    }
+
+    .score-badge {
+      font-size: 1.2rem;
+      font-weight: 900;
+      color: var(--primary-cyan);
+    }
+
+    /* Certificate Modal */
+    .certificate-box {
+      display: none;
+      background: #FFFDF0;
+      color: #1E293B;
+      border: 10px solid #D97706;
+      border-radius: 24px;
+      padding: 40px;
+      text-align: center;
+      box-shadow: 0 0 50px rgba(255, 208, 0, 0.8);
+      position: relative;
+    }
+
+    .cert-title {
+      font-size: 2.4rem;
+      color: #B45309;
+      font-weight: 900;
+      margin-bottom: 10px;
+    }
+
+    .cert-name {
+      font-size: 2rem;
+      color: #047857;
+      border-bottom: 3px dashed #047857;
+      display: inline-block;
+      padding: 0 20px;
+      margin: 15px 0;
+    }
+
+    .cert-seal {
+      width: 90px;
+      height: 90px;
+      background: #F59E0B;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 1.1rem;
+      margin: 20px auto 0;
+      box-shadow: 0 5px 15px rgba(245, 158, 11, 0.5);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="nav-bar">
+    <div style="font-weight: 900; color: var(--primary-yellow); font-size: 1.2rem;">✨ 亮亮精靈護眼平台</div>
+    <div class="nav-links">
+      <a href="index.html" class="nav-btn">🎬 冒險動畫與互動</a>
+      <a href="learning_quiz.html" class="nav-btn active">📝 小勇士闖關大測驗</a>
+      <a href="teacher_dashboard.html" class="nav-btn">🏫 教師/家長專區</a>
+      <a href="classroom_poster.html" class="nav-btn" style="background: rgba(16,185,129,0.2); color: #10B981;">📲 學生掃碼</a>
+    </div>
+  </div>
+
+  <div class="quiz-card" id="quiz-card">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <span style="font-size: 1rem; color: #94A3B8;">護眼常識大挑戰</span>
+      <span class="score-badge" id="score-text">得分：0 分</span>
+    </div>
+
+    <h2 class="q-title" id="question-text">第 1 題：看電視或看書滿 30 分鐘，應該要休息幾分鐘呢？</h2>
+    <div class="options-grid" id="options-container">
+      <button class="option-btn" onclick="checkAnswer(false)">A. 1 分鐘</button>
+      <button class="option-btn" onclick="checkAnswer(true)">B. 10 分鐘 (護眼 3010)</button>
+      <button class="option-btn" onclick="checkAnswer(false)">C. 不用休息</button>
+      <button class="option-btn" onclick="checkAnswer(false)">D. 60 分鐘</button>
+    </div>
+  </div>
+
+  <!-- Certificate View -->
+  <div class="certificate-box" id="certificate-box" style="width: 100%; max-width: 750px;">
+    <div class="cert-title">🏆 護眼小勇士榮譽證書</div>
+    <p style="font-size: 1.2rem; color: #475569;">恭喜小勇士順利通過護眼關卡考驗！</p>
+    <div>茲證明小勇士</div>
+    <div class="cert-name" id="user-cert-name">護眼智慧小達人</div>
+    <p style="font-size: 1.1rem; line-height: 1.8;">
+      熟記「<b>看書看電視 30 分鐘休息 10 分鐘</b>」與「<b>每日戶外活動 120 分鐘</b>」護眼密碼！<br>
+      特頒此證，以茲鼓勵！
+    </p>
+    <div class="cert-seal">亮亮精靈<br>認證</div>
+    <button onclick="window.print()" style="margin-top: 25px; padding: 12px 30px; background: #047857; color: white; border: none; border-radius: 25px; font-size: 1.1rem; font-weight: 900; cursor: pointer;">🖨️ 列印/儲存證書</button>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        q: "第 1 題：看電視或看書滿 30 分鐘，應該要休息幾分鐘呢？",
+        options: ["A. 1 分鐘", "B. 10 分鐘 (護眼 3010)", "C. 不用休息", "D. 60 分鐘"],
+        correct: 1
+      },
+      {
+        q: "第 2 題：每天應該去戶外活動、曬太陽多久，才能保護眼睛呢？",
+        options: ["A. 10 分鐘", "B. 30 分鐘", "C. 2 小時 (戶外 120)", "D. 5 小時"],
+        correct: 2
+      },
+      {
+        q: "第 3 題：當『霧濛濛怪獸』出現時，代表眼睛怎麼了呢？",
+        options: ["A. 眼睛太有精神了", "B. 眼睛累了、視力變得模糊", "C. 眼睛想吃冰淇淋", "D. 天氣下雨了"],
+        correct: 1
+      }
+    ];
+
+    let currentQ = 0;
+    let score = 0;
+
+    function renderQuestion() {
+      const qData = questions[currentQ];
+      document.getElementById('question-text').innerText = qData.q;
+      const container = document.getElementById('options-container');
+      container.innerHTML = '';
+
+      qData.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.innerText = opt;
+        btn.onclick = () => selectOption(idx);
+        container.appendChild(btn);
+      });
+    }
+
+    function selectOption(idx) {
+      if (idx === questions[currentQ].correct) {
+        score += 33.3;
+        alert("🎉 答對了！太棒了！");
+      } else {
+        alert("❌ 差一點點，再想一想喔！答案是 " + questions[currentQ].options[questions[currentQ].correct]);
+      }
+
+      currentQ++;
+      document.getElementById('score-text').innerText = `得分：${Math.round(score)} 分`;
+
+      if (currentQ < questions.length) {
+        renderQuestion();
+      } else {
+        document.getElementById('quiz-card').style.display = 'none';
+        document.getElementById('certificate-box').style.display = 'block';
+      }
+    }
+
+    renderQuestion();
+  </script>
+</body>
+</html>

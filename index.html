@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>亮亮精靈的眼球大冒險 - 兒童護眼互動動畫</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Noto+Sans+TC:wght@500;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-yellow: #FFD000;
+      --primary-cyan: #00E5FF;
+      --accent-green: #10B981;
+      --accent-pink: #FF4081;
+      --bg-gradient: linear-gradient(135deg, #1A1C29 0%, #0F2027 50%, #203A43 100%);
+      --card-bg: rgba(255, 255, 255, 0.12);
+      --card-border: rgba(255, 255, 255, 0.25);
+    }
+
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Fredoka', 'Noto Sans TC', sans-serif;
+      background: var(--bg-gradient);
+      color: #FFFFFF;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow-x: hidden;
+    }
+
+    /* Live Worker/Student Status Bubble Ticker */
+    .status-ticker-container {
+      width: 100%;
+      max-width: 1024px;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(10px);
+      border-radius: 50px;
+      margin-bottom: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    .ticker-label {
+      background: var(--primary-yellow);
+      color: #1A1C29;
+      font-weight: 900;
+      font-size: 0.85rem;
+      padding: 6px 14px;
+      border-radius: 20px;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 10px rgba(255, 208, 0, 0.4);
+    }
+
+    .ticker-content {
+      display: flex;
+      gap: 20px;
+      animation: tickerScroll 25s linear infinite;
+      white-space: nowrap;
+    }
+
+    @keyframes tickerScroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    .status-bubble {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.15);
+      padding: 6px 16px;
+      border-radius: 30px;
+      font-size: 0.9rem;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #10B981;
+      box-shadow: 0 0 10px #10B981;
+    }
+
+    .status-dot.warning { background: #FF9800; box-shadow: 0 0 10px #FF9800; }
+    .status-dot.danger { background: #EF4444; box-shadow: 0 0 10px #EF4444; }
+
+    /* Main Theater Canvas Container */
+    .app-container {
+      width: 100%;
+      max-width: 1024px;
+      height: 600px;
+      position: relative;
+      background: #12131C;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 0 2px rgba(255, 255, 255, 0.1);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Bar Header */
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 24px;
+      background: rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(12px);
+      z-index: 20;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .title-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .title-group h1 {
+      margin: 0;
+      font-size: 1.3rem;
+      font-weight: 900;
+      background: linear-gradient(90deg, #FFD000, #00E5FF);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 0.5px;
+    }
+
+    .scene-badges {
+      display: flex;
+      gap: 8px;
+    }
+
+    .badge {
+      padding: 6px 14px;
+      border-radius: 16px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.6);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .badge.active {
+      background: linear-gradient(135deg, #00E5FF, #3B82F6);
+      color: #FFFFFF;
+      box-shadow: 0 4px 15px rgba(0, 229, 255, 0.4);
+    }
+
+    .controls-group {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-icon {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: all 0.2s ease;
+    }
+
+    .btn-icon:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: scale(1.08);
+    }
+
+    /* Scene Viewport */
+    .viewport {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Scene Backdrops */
+    .scene-bg {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      transition: filter 1s ease, transform 1s ease, opacity 0.8s ease;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .scene-bg.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* Scene 1 Myopia Blur Effect */
+    .blur-myopia {
+      filter: blur(14px) contrast(85%) opacity(0.85);
+      backdrop-filter: blur(14px);
+    }
+
+    /* Character & Objects Positioning */
+    .mascot-container {
+      position: absolute;
+      bottom: 40px;
+      left: 10%;
+      width: 220px;
+      height: 220px;
+      z-index: 10;
+      transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .mascot-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));
+    }
+
+    .antenna-glow {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #FFFF00 0%, rgba(255, 255, 0, 0) 70%);
+      animation: pulseGlow 1.5s infinite alternate;
+      pointer-events: none;
+    }
+
+    @keyframes pulseGlow {
+      0% { opacity: 0.4; transform: translateX(-50%) scale(0.9); }
+      100% { opacity: 1; transform: translateX(-50%) scale(1.4); }
+    }
+
+    /* Fog Monster */
+    .monster-container {
+      position: absolute;
+      bottom: 50px;
+      right: 10%;
+      width: 240px;
+      height: 240px;
+      z-index: 9;
+      transition: all 0.8s ease;
+      animation: floatMonster 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes floatMonster {
+      0% { transform: translateY(0) rotate(-2deg); }
+      100% { transform: translateY(-18px) rotate(3deg); }
+    }
+
+    .monster-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 10px 25px rgba(0,0,0,0.6));
+    }
+
+    /* Scene 2 Jelly Clock */
+    .clock-wrapper {
+      position: absolute;
+      top: 15%;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 12;
+    }
+
+    .jelly-clock {
+      width: 150px;
+      height: 150px;
+      background: radial-gradient(circle, #FFFFFF 0%, #E2E8F0 100%);
+      border: 8px solid var(--primary-yellow);
+      border-radius: 50%;
+      box-shadow: 0 10px 30px rgba(255, 208, 0, 0.5), inset 0 0 15px rgba(0,0,0,0.1);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .jelly-wobble {
+      animation: jellyWobble 0.8s ease-in-out infinite;
+    }
+
+    @keyframes jellyWobble {
+      0% { transform: scale(1, 1); }
+      30% { transform: scale(1.25, 0.75) rotate(-5deg); }
+      40% { transform: scale(0.75, 1.25) rotate(5deg); }
+      50% { transform: scale(1.15, 0.85); }
+      65% { transform: scale(0.95, 1.05); }
+      75% { transform: scale(1.05, 0.95); }
+      100% { transform: scale(1, 1); }
+    }
+
+    .clock-hand {
+      position: absolute;
+      bottom: 50%;
+      left: calc(50% - 3px);
+      width: 6px;
+      height: 55px;
+      background: #E11D48;
+      border-radius: 4px;
+      transform-origin: bottom center;
+      transform: rotate(0deg);
+      transition: transform 1s cubic-bezier(0.4, 2, 0.55, 0.44);
+    }
+
+    .clock-center {
+      width: 16px;
+      height: 16px;
+      background: #1E293B;
+      border-radius: 50%;
+      z-index: 2;
+    }
+
+    .clock-timer-text {
+      margin-top: 10px;
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: #FFD000;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+      background: rgba(0,0,0,0.5);
+      padding: 4px 16px;
+      border-radius: 20px;
+    }
+
+    /* Scene 3 Solar Energy Bar */
+    .solar-bar-container {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 70%;
+      max-width: 500px;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(10px);
+      padding: 12px 20px;
+      border-radius: 25px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      z-index: 15;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .solar-title {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #FFD000;
+    }
+
+    .solar-track {
+      width: 100%;
+      height: 18px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .solar-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #FF7300, #FFD000, #FFF500);
+      border-radius: 10px;
+      box-shadow: 0 0 15px #FFD000;
+      transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    /* Sunlight Rays Beam Effect */
+    .sunbeam-overlay {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 80% 20%, rgba(255, 241, 118, 0.6) 0%, rgba(255, 208, 0, 0.2) 50%, rgba(0,0,0,0) 80%);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 1s ease;
+      z-index: 11;
+    }
+
+    .sunbeam-overlay.active {
+      opacity: 1;
+    }
+
+    /* Interactive Decision Cards Container */
+    .interactive-panel {
+      position: absolute;
+      bottom: 25px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90%;
+      max-width: 700px;
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      z-index: 25;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .interactive-panel.hidden {
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-50%, 30px);
+    }
+
+    .choice-card {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(16px);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 24px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    }
+
+    .choice-card:hover {
+      transform: translateY(-8px) scale(1.03);
+      background: rgba(255, 255, 255, 0.25);
+      border-color: var(--primary-yellow);
+      box-shadow: 0 15px 35px rgba(255, 208, 0, 0.4);
+    }
+
+    .choice-card.correct {
+      border-color: var(--accent-green);
+      background: rgba(16, 185, 129, 0.25);
+      box-shadow: 0 0 30px #10B981;
+    }
+
+    .choice-card.wrong {
+      border-color: #EF4444;
+      background: rgba(239, 68, 68, 0.25);
+      animation: shakeWrong 0.5s ease;
+    }
+
+    @keyframes shakeWrong {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-10px); }
+      40%, 80% { transform: translateX(10px); }
+    }
+
+    .choice-img-thumb {
+      width: 100px;
+      height: 100px;
+      border-radius: 16px;
+      object-fit: cover;
+      border: 3px solid rgba(255, 255, 255, 0.4);
+    }
+
+    .choice-title {
+      font-size: 1.1rem;
+      font-weight: 900;
+      color: #FFFFFF;
+      text-align: center;
+    }
+
+    .choice-sub {
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    /* Subtitle & VO Display Box */
+    .vo-box {
+      padding: 16px 28px;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      min-height: 90px;
+      z-index: 20;
+    }
+
+    .mascot-avatar {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background: var(--primary-yellow);
+      border: 3px solid #FFFFFF;
+      overflow: hidden;
+      flex-shrink: 0;
+      box-shadow: 0 0 15px rgba(255, 208, 0, 0.6);
+    }
+
+    .mascot-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .vo-text {
+      font-size: 1.1rem;
+      font-weight: 700;
+      line-height: 1.5;
+      color: #FFFFFF;
+      flex: 1;
+    }
+
+    .highlight-keyword {
+      color: var(--primary-yellow);
+      font-weight: 900;
+      text-shadow: 0 0 8px rgba(255, 208, 0, 0.5);
+    }
+
+    /* Confetti Canvas */
+    #confetti-canvas {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 50;
+    }
+
+    /* TV Screen Overlay in Scene 1 */
+    .tv-screen {
+      position: absolute;
+      top: 15%;
+      left: 35%;
+      width: 320px;
+      height: 200px;
+      background: #000;
+      border: 12px solid #334155;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+      z-index: 5;
+      transition: transform 3s ease;
+    }
+
+    .tv-screen.zoom-in {
+      transform: scale(1.4) translateY(20px);
+    }
+
+    .tv-content {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, #FF4081, #7C4DFF);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: 900;
+      animation: tvColor 2s infinite alternate;
+    }
+
+    @keyframes tvColor {
+      0% { filter: hue-rotate(0deg); }
+      100% { filter: hue-rotate(90deg); }
+    }
+
+    /* Pinky Promise Scene 4 */
+    .pinky-promise-icon {
+      font-size: 5rem;
+      animation: bounceHeart 1s infinite alternate;
+      margin-bottom: 10px;
+    }
+
+    @keyframes bounceHeart {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.2) rotate(5deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Live Status Bubble Ticker (Who is doing what) -->
+  <div class="status-ticker-container">
+    <div class="ticker-label">
+      <span>✨ 護眼小夥伴動態</span>
+    </div>
+    <div class="ticker-content" id="ticker-content">
+      <div class="status-bubble"><span class="status-dot"></span>亮亮精靈：正在遠眺綠樹休息 🌳 (已休息 8 分鐘)</div>
+      <div class="status-bubble"><span class="status-dot"></span>小明：公園放風箏踢皮球 🪁 (戶外活動 90 分鐘)</div>
+      <div class="status-bubble"><span class="status-dot warning"></span>莉莉：看故事書滿 25 分鐘 ⏰ (準備休息)</div>
+      <div class="status-bubble"><span class="status-dot"></span>阿強：戶外曬太陽能量滿格 ☀️ (已滿 120 分鐘)</div>
+      <div class="status-bubble"><span class="status-dot"></span>美美：打勾勾守護靈魂之窗 🤙</div>
+    </div>
+  </div>
+
+  <!-- Main Animation & Game Theater -->
+  <div class="app-container">
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- Header Navigation -->
+    <div class="header-bar">
+      <div class="title-group">
+        <h1>亮亮精靈的眼球大冒險</h1>
+        <nav style="display: flex; gap: 8px; margin-left: 15px;">
+          <a href="index.html" style="color: #FFD000; text-decoration: none; font-weight: 700; font-size: 0.85rem; padding: 4px 10px; background: rgba(255,208,0,0.2); border-radius: 12px;">🎬 冒險動畫</a>
+          <a href="learning_quiz.html" style="color: #FFFFFF; text-decoration: none; font-weight: 700; font-size: 0.85rem; padding: 4px 10px; background: rgba(255,255,255,0.1); border-radius: 12px;">📝 護眼小測驗</a>
+          <a href="teacher_dashboard.html" style="color: #FFFFFF; text-decoration: none; font-weight: 700; font-size: 0.85rem; padding: 4px 10px; background: rgba(255,255,255,0.1); border-radius: 12px;">🏫 教師專區</a>
+          <a href="classroom_poster.html" style="color: #10B981; text-decoration: none; font-weight: 700; font-size: 0.85rem; padding: 4px 10px; background: rgba(16,185,129,0.2); border-radius: 12px;">📲 學生掃碼</a>
+        </nav>
+      </div>
+      <div class="scene-badges">
+        <div class="badge active" onclick="switchScene(1)">第一幕：霧濛濛怪獸</div>
+        <div class="badge" onclick="switchScene(2)">第二幕：護眼 3010</div>
+        <div class="badge" onclick="switchScene(3)">第三幕：太陽光 120</div>
+        <div class="badge" onclick="switchScene(4)">第四幕：打勾勾約定</div>
+      </div>
+      <div class="controls-group">
+        <button class="btn-icon" id="btn-audio" onclick="toggleAudio()" title="開啟/靜音語音">🔊</button>
+        <button class="btn-icon" onclick="restartCurrentScene()" title="重新播放本幕">🔄</button>
+      </div>
+    </div>
+
+    <!-- Viewport Screen -->
+    <div class="viewport" id="viewport">
+      <div class="sunbeam-overlay" id="sunbeam-overlay"></div>
+
+      <!-- Mascot Element -->
+      <div class="mascot-container" id="mascot-box">
+        <div class="antenna-glow"></div>
+        <img src="assets/liang_liang.jpg" alt="亮亮精靈" class="mascot-img" id="mascot-img">
+      </div>
+
+      <!-- Scene 1: Living Room Myopia Blur & Monster -->
+      <div class="scene-bg active" id="scene1-bg" style="background: radial-gradient(circle, #2A2D3E 0%, #11131F 100%);">
+        <div class="tv-screen" id="tv-screen">
+          <div class="tv-content">📺 卡通節目</div>
+        </div>
+        <div class="monster-container" id="fog-monster" style="opacity: 0; transform: scale(0.5);">
+          <img src="assets/fog_monster.jpg" alt="霧濛濛怪獸" class="monster-img">
+        </div>
+      </div>
+
+      <!-- Scene 2: 3010 Clock Magic -->
+      <div class="scene-bg" id="scene2-bg" style="background: radial-gradient(circle, #1E293B 0%, #0F172A 100%);">
+        <div class="clock-wrapper">
+          <div class="jelly-clock" id="jelly-clock">
+            <div class="clock-hand" id="clock-hand"></div>
+            <div class="clock-center"></div>
+          </div>
+          <div class="clock-timer-text" id="clock-text">00 : 00</div>
+        </div>
+      </div>
+
+      <!-- Scene 3: Outdoor Park Sunshine Magic (120 Mins) -->
+      <div class="scene-bg" id="scene3-bg" style="background: url('assets/park_kite.jpg') center/cover no-repeat;">
+        <div class="solar-bar-container">
+          <div class="solar-title">
+            <span>☀️ 太陽能量條 (戶外 120 分鐘)</span>
+            <span id="solar-percent">0%</span>
+          </div>
+          <div class="solar-track">
+            <div class="solar-fill" id="solar-fill"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scene 4: Happy Ending Pinky Promise -->
+      <div class="scene-bg" id="scene4-bg" style="background: radial-gradient(circle, #311B92 0%, #0D47A1 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+        <div class="pinky-promise-icon">🤙✨💖</div>
+        <h2 style="font-size: 2.2rem; color: #FFD000; margin: 0; text-shadow: 0 4px 20px rgba(255,208,0,0.6);">我們打勾勾約定！</h2>
+        <p style="font-size: 1.2rem; color: #E2E8F0; margin-top: 10px;">看書坐端正 • 不靠近螢幕 • 多去外面玩</p>
+      </div>
+
+      <!-- Interactive Option Buttons -->
+      <div class="interactive-panel hidden" id="interactive-panel">
+        <div class="choice-card" id="choice-a" onclick="handleChoice('A')">
+          <img id="img-choice-a" src="assets/fog_monster.jpg" class="choice-img-thumb" alt="選項 A">
+          <div class="choice-title" id="title-choice-a">A: 繼續看螢幕</div>
+          <div class="choice-sub" id="sub-choice-a">疲累的眼睛</div>
+        </div>
+        <div class="choice-card" id="choice-b" onclick="handleChoice('B')">
+          <img id="img-choice-b" src="assets/green_tree.jpg" class="choice-img-thumb" alt="選項 B">
+          <div class="choice-title" id="title-choice-b">B: 望向遠方綠樹</div>
+          <div class="choice-sub" id="sub-choice-b">開心的眼睛</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Subtitle Box -->
+    <div class="vo-box">
+      <div class="mascot-avatar">
+        <img src="assets/liang_liang.jpg" alt="亮亮精靈頭像">
+      </div>
+      <div class="vo-text" id="vo-text">
+        準備好了嗎？點擊畫面或按上方按鈕開始【亮亮精靈的眼球大冒險】吧！
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Audio Sound Effects Synthesizer (Web Audio API)
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    let audioEnabled = true;
+
+    function playSound(type) {
+      if (!audioEnabled) return;
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      const now = audioCtx.currentTime;
+
+      if (type === 'wobble') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(300, now);
+        osc.frequency.exponentialRampToValueAtTime(150, now + 0.4);
+        gain.gain.setValueAtTime(0.3, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+        osc.start(now);
+        osc.stop(now + 0.4);
+      } else if (type === 'correct') {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(523.25, now); // C5
+        osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
+        osc.frequency.setValueAtTime(783.99, now + 0.2); // G5
+        osc.frequency.setValueAtTime(1046.50, now + 0.3); // C6
+        gain.gain.setValueAtTime(0.4, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.6);
+        osc.start(now);
+        osc.stop(now + 0.6);
+      } else if (type === 'wrong') {
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(200, now);
+        osc.frequency.setValueAtTime(140, now + 0.2);
+        gain.gain.setValueAtTime(0.3, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+        osc.start(now);
+        osc.stop(now + 0.5);
+      } else if (type === 'sunbeam') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(400, now);
+        osc.frequency.exponentialRampToValueAtTime(1200, now + 0.8);
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.8);
+        osc.start(now);
+        osc.stop(now + 0.8);
+      }
+    }
+
+    // VoiceOver TTS Engine (SpeechSynthesis)
+    function speakText(text, callback) {
+      document.getElementById('vo-text').innerHTML = text;
+      
+      if (!audioEnabled || !('speechSynthesis' in window)) {
+        if (callback) setTimeout(callback, 3000);
+        return;
+      }
+
+      window.speechSynthesis.cancel();
+      // Remove HTML tags for TTS
+      const cleanText = text.replace(/<[^>]*>/g, '');
+      const utterance = new SpeechSynthesisUtterance(cleanText);
+      utterance.lang = 'zh-TW';
+      utterance.rate = 1.0;
+      utterance.pitch = 1.25; // Cute kid friendly mascot pitch
+
+      utterance.onend = () => {
+        if (callback) callback();
+      };
+
+      utterance.onerror = () => {
+        if (callback) callback();
+      };
+
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function toggleAudio() {
+      audioEnabled = !audioEnabled;
+      document.getElementById('btn-audio').innerText = audioEnabled ? '🔊' : '🔇';
+      if (!audioEnabled && window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+      }
+    }
+
+    // Scene State Machine
+    let currentScene = 1;
+    let clockInterval = null;
+
+    function updateBadges(sceneNum) {
+      const badges = document.querySelectorAll('.badge');
+      badges.forEach((b, idx) => {
+        if (idx + 1 === sceneNum) b.classList.add('active');
+        else b.classList.remove('active');
+      });
+    }
+
+    function hideAllPanels() {
+      document.getElementById('interactive-panel').classList.add('hidden');
+      document.getElementById('sunbeam-overlay').classList.remove('active');
+      const monster = document.getElementById('fog-monster');
+      monster.style.opacity = '0';
+      monster.style.transform = 'scale(0.5)';
+      document.getElementById('scene1-bg').classList.remove('blur-myopia');
+      document.getElementById('tv-screen').classList.remove('zoom-in');
+      if (clockInterval) clearInterval(clockInterval);
+    }
+
+    function switchScene(sceneNum) {
+      currentScene = sceneNum;
+      updateBadges(sceneNum);
+      hideAllPanels();
+
+      document.querySelectorAll('.scene-bg').forEach((el, idx) => {
+        if (idx + 1 === sceneNum) el.classList.add('active');
+        else el.classList.remove('active');
+      });
+
+      if (sceneNum === 1) playScene1();
+      else if (sceneNum === 2) playScene2();
+      else if (sceneNum === 3) playScene3();
+      else if (sceneNum === 4) playScene4();
+    }
+
+    function restartCurrentScene() {
+      switchScene(currentScene);
+    }
+
+    // Scene 1 Logic
+    function playScene1() {
+      const mascot = document.getElementById('mascot-box');
+      mascot.style.left = '10%';
+      mascot.style.transform = 'scale(1)';
+
+      const tv = document.getElementById('tv-screen');
+      const scene1Bg = document.getElementById('scene1-bg');
+      const monster = document.getElementById('fog-monster');
+
+      speakText("【第一幕：危機來臨！】亮亮精靈正在客廳看電視...", () => {
+        tv.classList.add('zoom-in');
+        setTimeout(() => {
+          scene1Bg.classList.add('blur-myopia');
+          monster.style.opacity = '1';
+          monster.style.transform = 'scale(1)';
+          playSound('wobble');
+
+          speakText("<span class='highlight-keyword'>「哎呀！前面的玩具和電視怎麼都變得霧霧的、看不清楚了？嗚嗚，我的眼睛好累喔。原來是『霧濛濛怪獸』來搗蛋了！小朋友，快來幫亮亮一起把眼睛變亮吧！」</span>", () => {
+            setTimeout(() => switchScene(2), 2000);
+          });
+        }, 1500);
+      });
+    }
+
+    // Scene 2 Logic
+    function playScene2() {
+      const mascot = document.getElementById('mascot-box');
+      mascot.style.left = '12%';
+
+      const clockHand = document.getElementById('clock-hand');
+      const clockText = document.getElementById('clock-text');
+      const jellyClock = document.getElementById('jelly-clock');
+
+      let minutes = 0;
+      clockHand.style.transform = 'rotate(0deg)';
+      clockText.innerText = '00 : 00';
+
+      speakText("【第二幕：護眼 3010 魔法】發光大時鐘開始轉動了...", () => {
+        clockInterval = setInterval(() => {
+          minutes += 5;
+          const degrees = (minutes / 60) * 360;
+          clockHand.style.transform = `rotate(${degrees}deg)`;
+          clockText.innerText = `00 : ${minutes < 10 ? '0' + minutes : minutes}`;
+
+          if (minutes >= 30) {
+            clearInterval(clockInterval);
+            jellyClock.classList.add('jelly-wobble');
+            playSound('wobble');
+
+            speakText("「大鐘響起囉！我們已經看電視看好久了。現在請小朋友幫忙，點選哪一個圖案，才能讓眼睛休息呢？」", () => {
+              showScene2Choices();
+            });
+          }
+        }, 300);
+      });
+    }
+
+    function showScene2Choices() {
+      const panel = document.getElementById('interactive-panel');
+      document.getElementById('img-choice-a').src = 'assets/fog_monster.jpg';
+      document.getElementById('title-choice-a').innerText = 'A: 繼續看螢幕';
+      document.getElementById('sub-choice-a').innerText = '一隻疲累的眼睛 😵';
+
+      document.getElementById('img-choice-b').src = 'assets/green_tree.jpg';
+      document.getElementById('title-choice-b').innerText = 'B: 望向遠方綠樹';
+      document.getElementById('sub-choice-b').innerText = '一隻開心的眼睛 🌳';
+
+      panel.classList.remove('hidden');
+    }
+
+    // Scene 3 Logic
+    function playScene3() {
+      const mascot = document.getElementById('mascot-box');
+      mascot.style.left = '15%';
+
+      const fill = document.getElementById('solar-fill');
+      const percent = document.getElementById('solar-percent');
+      fill.style.width = '0%';
+      percent.innerText = '0%';
+
+      const monster = document.getElementById('fog-monster');
+      monster.style.opacity = '1';
+      monster.style.right = '15%';
+      monster.style.transform = 'scale(0.9)';
+      document.getElementById('scene3-bg').appendChild(monster);
+
+      speakText("【第三幕：太陽光魔法陣】來到公園了！快幫亮亮選擇好玩的東西。", () => {
+        showScene3Choices();
+      });
+    }
+
+    function showScene3Choices() {
+      const panel = document.getElementById('interactive-panel');
+      document.getElementById('img-choice-a').src = 'assets/fog_monster.jpg';
+      document.getElementById('title-choice-a').innerText = 'A: 躺草地上玩平板';
+      document.getElementById('sub-choice-a').innerText = '眼睛近視加重 📱';
+
+      document.getElementById('img-choice-b').src = 'assets/park_kite.jpg';
+      document.getElementById('title-choice-b').innerText = 'B: 放風箏與踢皮球';
+      document.getElementById('sub-choice-b').innerText = '大太陽下戶外活動 🪁';
+
+      panel.classList.remove('hidden');
+    }
+
+    // Choice Handler
+    function handleChoice(option) {
+      const cardA = document.getElementById('choice-a');
+      const cardB = document.getElementById('choice-b');
+
+      if (currentScene === 2) {
+        if (option === 'A') {
+          cardA.classList.add('wrong');
+          playSound('wrong');
+          setTimeout(() => cardA.classList.remove('wrong'), 600);
+          speakText("「哎呀，眼睛更累了，霧濛濛怪獸變大了！再選一次，看哪裡可以休息呢？」");
+        } else if (option === 'B') {
+          cardB.classList.add('correct');
+          playSound('correct');
+          triggerConfetti();
+          document.getElementById('interactive-panel').classList.add('hidden');
+          
+          speakText("<span class='highlight-keyword'>「答對了！看書看電視 30 分鐘，就要讓眼睛休息 10 分鐘，看看遠處喔！你太棒了！」</span>", () => {
+            setTimeout(() => switchScene(3), 2000);
+          });
+        }
+      } else if (currentScene === 3) {
+        if (option === 'A') {
+          cardA.classList.add('wrong');
+          playSound('wrong');
+          setTimeout(() => cardA.classList.remove('wrong'), 600);
+          speakText("「哎呀！在戶外玩平板眼睛會受傷喔，太陽魔法無法集滿！再選一次吧！」");
+        } else if (option === 'B') {
+          cardB.classList.add('correct');
+          playSound('correct');
+          playSound('sunbeam');
+          document.getElementById('interactive-panel').classList.add('hidden');
+
+          // Solar Energy Fill Animation
+          document.getElementById('solar-fill').style.width = '100%';
+          document.getElementById('solar-percent').innerText = '100%';
+          document.getElementById('sunbeam-overlay').classList.add('active');
+
+          const monster = document.getElementById('fog-monster');
+          monster.style.transition = 'all 1.5s ease';
+          monster.style.opacity = '0';
+          monster.style.transform = 'scale(0.1) rotate(180deg)';
+
+          triggerConfetti();
+
+          speakText("<span class='highlight-keyword'>「耶！答對了！每天去戶外活動、曬曬太陽 2 個小時（120分鐘），太陽光會保護我們的眼睛，讓近視怪獸不敢來喔！」</span>", () => {
+            setTimeout(() => switchScene(4), 2500);
+          });
+        }
+      }
+    }
+
+    // Scene 4 Logic
+    function playScene4() {
+      const mascot = document.getElementById('mascot-box');
+      mascot.style.left = '50%';
+      mascot.style.transform = 'translateX(-50%) scale(1.2)';
+
+      playSound('correct');
+      triggerConfetti();
+
+      speakText("<span class='highlight-keyword'>「我們打勾勾，看書坐端正、不靠近螢幕、多去外面玩，一起保護亮晶晶的眼睛喔！」</span>");
+    }
+
+    // Confetti Engine
+    function triggerConfetti() {
+      const canvas = document.getElementById('confetti-canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+
+      const particles = [];
+      const colors = ['#FFD000', '#00E5FF', '#10B981', '#FF4081', '#FFFFFF'];
+
+      for (let i = 0; i < 80; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height - canvas.height,
+          size: Math.random() * 8 + 4,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          vy: Math.random() * 3 + 2,
+          vx: Math.random() * 2 - 1,
+          rot: Math.random() * 360
+        });
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        let alive = false;
+        particles.forEach(p => {
+          p.y += p.vy;
+          p.x += p.vx;
+          p.rot += 4;
+          if (p.y < canvas.height) alive = true;
+
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate((p.rot * Math.PI) / 180);
+          ctx.fillStyle = p.color;
+          ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+          ctx.restore();
+        });
+
+        if (alive) requestAnimationFrame(animate);
+      }
+      animate();
+    }
+
+    // Auto Start Scene 1 on first click
+    window.addEventListener('load', () => {
+      document.querySelector('.app-container').addEventListener('click', function firstClick() {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        this.removeEventListener('click', firstClick);
+      });
+      switchScene(1);
+    });
+  </script>
+</body>
+</html>
