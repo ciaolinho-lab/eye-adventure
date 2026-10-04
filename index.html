@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>亮亮精靈的眼球大冒險 - 兒童護眼互動動畫</title>
+  <title>亮亮精靈的眼球大冒險 - 兒童護眼互動平台</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Noto+Sans+TC:wght@500;700;900&display=swap" rel="stylesheet">
@@ -14,14 +14,10 @@
       --accent-green: #10B981;
       --accent-pink: #FF4081;
       --bg-gradient: linear-gradient(135deg, #1A1C29 0%, #0F2027 50%, #203A43 100%);
-      --card-bg: rgba(255, 255, 255, 0.12);
-      --card-border: rgba(255, 255, 255, 0.25);
     }
 
     * {
       box-sizing: border-box;
-      user-select: none;
-      -webkit-user-select: none;
     }
 
     body {
@@ -34,14 +30,79 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      padding: 15px;
       overflow-x: hidden;
     }
 
-    /* Live Worker/Student Status Bubble Ticker */
-    .status-ticker-container {
+    /* Navigation Bar */
+    .top-nav {
       width: 100%;
       max-width: 1024px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(12px);
+      padding: 12px 20px;
+      border-radius: 50px;
+      margin-bottom: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .brand-title {
+      font-weight: 900;
+      font-size: 1.25rem;
+      background: linear-gradient(90deg, #FFD000, #00E5FF);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .tab-buttons {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .tab-btn.active, .tab-btn:hover {
+      background: var(--primary-cyan);
+      color: #12131C;
+      box-shadow: 0 4px 15px rgba(0, 229, 255, 0.4);
+    }
+
+    /* Views Switcher */
+    .app-view {
+      display: none;
+      width: 100%;
+      max-width: 1024px;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .app-view.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* --- View 1: Animation Theater --- */
+    .status-ticker-container {
+      width: 100%;
       padding: 10px 20px;
       display: flex;
       align-items: center;
@@ -52,7 +113,6 @@
       margin-bottom: 12px;
       border: 1px solid rgba(255, 255, 255, 0.15);
       overflow: hidden;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
     }
 
     .ticker-label {
@@ -63,10 +123,6 @@
       padding: 6px 14px;
       border-radius: 20px;
       white-space: nowrap;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      box-shadow: 0 2px 10px rgba(255, 208, 0, 0.4);
     }
 
     .ticker-content {
@@ -89,60 +145,28 @@
       padding: 6px 16px;
       border-radius: 30px;
       font-size: 0.9rem;
-      border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
-    .status-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: #10B981;
-      box-shadow: 0 0 10px #10B981;
-    }
-
-    .status-dot.warning { background: #FF9800; box-shadow: 0 0 10px #FF9800; }
-    .status-dot.danger { background: #EF4444; box-shadow: 0 0 10px #EF4444; }
-
-    /* Main Theater Canvas Container */
-    .app-container {
+    .theater-container {
       width: 100%;
-      max-width: 1024px;
-      height: 600px;
+      height: 560px;
       position: relative;
       background: #12131C;
       border-radius: 28px;
       overflow: hidden;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 0 2px rgba(255, 255, 255, 0.1);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
       display: flex;
       flex-direction: column;
     }
 
-    /* Top Bar Header */
-    .header-bar {
+    .theater-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 16px 24px;
-      background: rgba(0, 0, 0, 0.35);
+      padding: 14px 20px;
+      background: rgba(0, 0, 0, 0.4);
       backdrop-filter: blur(12px);
       z-index: 20;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .title-group {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .title-group h1 {
-      margin: 0;
-      font-size: 1.3rem;
-      font-weight: 900;
-      background: linear-gradient(90deg, #FFD000, #00E5FF);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      letter-spacing: 0.5px;
     }
 
     .scene-badges {
@@ -156,43 +180,15 @@
       font-size: 0.8rem;
       font-weight: 700;
       background: rgba(255, 255, 255, 0.1);
-      color: rgba(255, 255, 255, 0.6);
-      transition: all 0.3s ease;
+      color: rgba(255, 255, 255, 0.7);
       cursor: pointer;
     }
 
     .badge.active {
       background: linear-gradient(135deg, #00E5FF, #3B82F6);
       color: #FFFFFF;
-      box-shadow: 0 4px 15px rgba(0, 229, 255, 0.4);
     }
 
-    .controls-group {
-      display: flex;
-      gap: 10px;
-    }
-
-    .btn-icon {
-      background: rgba(255, 255, 255, 0.15);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: white;
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 1.1rem;
-      transition: all 0.2s ease;
-    }
-
-    .btn-icon:hover {
-      background: rgba(255, 255, 255, 0.3);
-      transform: scale(1.08);
-    }
-
-    /* Scene Viewport */
     .viewport {
       flex: 1;
       position: relative;
@@ -202,14 +198,13 @@
       justify-content: center;
     }
 
-    /* Scene Backdrops */
     .scene-bg {
       position: absolute;
       inset: 0;
       background-size: cover;
       background-position: center;
-      transition: filter 1s ease, transform 1s ease, opacity 0.8s ease;
       opacity: 0;
+      transition: opacity 0.8s ease;
       pointer-events: none;
     }
 
@@ -218,73 +213,38 @@
       pointer-events: auto;
     }
 
-    /* Scene 1 Myopia Blur Effect */
-    .blur-myopia {
-      filter: blur(14px) contrast(85%) opacity(0.85);
-      backdrop-filter: blur(14px);
-    }
-
-    /* Character & Objects Positioning */
     .mascot-container {
       position: absolute;
-      bottom: 40px;
+      bottom: 30px;
       left: 10%;
-      width: 220px;
-      height: 220px;
+      width: 200px;
+      height: 200px;
       z-index: 10;
-      transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transition: all 0.8s ease;
     }
 
     .mascot-img {
       width: 100%;
       height: 100%;
       object-fit: contain;
-      filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));
     }
 
-    .antenna-glow {
-      position: absolute;
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: radial-gradient(circle, #FFFF00 0%, rgba(255, 255, 0, 0) 70%);
-      animation: pulseGlow 1.5s infinite alternate;
-      pointer-events: none;
-    }
-
-    @keyframes pulseGlow {
-      0% { opacity: 0.4; transform: translateX(-50%) scale(0.9); }
-      100% { opacity: 1; transform: translateX(-50%) scale(1.4); }
-    }
-
-    /* Fog Monster */
     .monster-container {
       position: absolute;
-      bottom: 50px;
+      bottom: 40px;
       right: 10%;
-      width: 240px;
-      height: 240px;
+      width: 220px;
+      height: 220px;
       z-index: 9;
       transition: all 0.8s ease;
-      animation: floatMonster 3s ease-in-out infinite alternate;
-    }
-
-    @keyframes floatMonster {
-      0% { transform: translateY(0) rotate(-2deg); }
-      100% { transform: translateY(-18px) rotate(3deg); }
     }
 
     .monster-img {
       width: 100%;
       height: 100%;
       object-fit: contain;
-      filter: drop-shadow(0 10px 25px rgba(0,0,0,0.6));
     }
 
-    /* Scene 2 Jelly Clock */
     .clock-wrapper {
       position: absolute;
       top: 15%;
@@ -297,137 +257,45 @@
     }
 
     .jelly-clock {
-      width: 150px;
-      height: 150px;
-      background: radial-gradient(circle, #FFFFFF 0%, #E2E8F0 100%);
-      border: 8px solid var(--primary-yellow);
+      width: 140px;
+      height: 140px;
       border-radius: 50%;
-      box-shadow: 0 10px 30px rgba(255, 208, 0, 0.5), inset 0 0 15px rgba(0,0,0,0.1);
+      background: radial-gradient(circle, #00E5FF 0%, #0284C7 100%);
+      border: 6px solid #FFFFFF;
       position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .jelly-wobble {
-      animation: jellyWobble 0.8s ease-in-out infinite;
-    }
-
-    @keyframes jellyWobble {
-      0% { transform: scale(1, 1); }
-      30% { transform: scale(1.25, 0.75) rotate(-5deg); }
-      40% { transform: scale(0.75, 1.25) rotate(5deg); }
-      50% { transform: scale(1.15, 0.85); }
-      65% { transform: scale(0.95, 1.05); }
-      75% { transform: scale(1.05, 0.95); }
-      100% { transform: scale(1, 1); }
+      box-shadow: 0 0 30px rgba(0, 229, 255, 0.6);
     }
 
     .clock-hand {
       position: absolute;
-      bottom: 50%;
-      left: calc(50% - 3px);
+      top: 15px;
+      left: 50%;
       width: 6px;
       height: 55px;
-      background: #E11D48;
-      border-radius: 4px;
+      background: #FFD000;
       transform-origin: bottom center;
-      transform: rotate(0deg);
-      transition: transform 1s cubic-bezier(0.4, 2, 0.55, 0.44);
-    }
-
-    .clock-center {
-      width: 16px;
-      height: 16px;
-      background: #1E293B;
-      border-radius: 50%;
-      z-index: 2;
+      border-radius: 4px;
+      transform: translateX(-50%) rotate(0deg);
     }
 
     .clock-timer-text {
-      margin-top: 10px;
-      font-size: 1.4rem;
+      font-size: 2.2rem;
       font-weight: 900;
       color: #FFD000;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.8);
-      background: rgba(0,0,0,0.5);
-      padding: 4px 16px;
-      border-radius: 20px;
+      margin-top: 10px;
     }
 
-    /* Scene 3 Solar Energy Bar */
-    .solar-bar-container {
-      position: absolute;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 70%;
-      max-width: 500px;
-      background: rgba(0,0,0,0.6);
-      backdrop-filter: blur(10px);
-      padding: 12px 20px;
-      border-radius: 25px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      z-index: 15;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .solar-title {
-      display: flex;
-      justify-content: space-between;
-      font-weight: 700;
-      font-size: 0.95rem;
-      color: #FFD000;
-    }
-
-    .solar-track {
-      width: 100%;
-      height: 18px;
-      background: rgba(255, 255, 255, 0.15);
-      border-radius: 10px;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .solar-fill {
-      width: 0%;
-      height: 100%;
-      background: linear-gradient(90deg, #FF7300, #FFD000, #FFF500);
-      border-radius: 10px;
-      box-shadow: 0 0 15px #FFD000;
-      transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-
-    /* Sunlight Rays Beam Effect */
-    .sunbeam-overlay {
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at 80% 20%, rgba(255, 241, 118, 0.6) 0%, rgba(255, 208, 0, 0.2) 50%, rgba(0,0,0,0) 80%);
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 1s ease;
-      z-index: 11;
-    }
-
-    .sunbeam-overlay.active {
-      opacity: 1;
-    }
-
-    /* Interactive Decision Cards Container */
     .interactive-panel {
       position: absolute;
       bottom: 25px;
       left: 50%;
       transform: translateX(-50%);
       width: 90%;
-      max-width: 700px;
+      max-width: 650px;
       display: flex;
-      gap: 20px;
-      justify-content: center;
+      gap: 16px;
       z-index: 25;
-      transition: opacity 0.5s ease, transform 0.5s ease;
+      transition: all 0.5s ease;
     }
 
     .interactive-panel.hidden {
@@ -441,85 +309,46 @@
       background: rgba(255, 255, 255, 0.15);
       backdrop-filter: blur(16px);
       border: 2px solid rgba(255, 255, 255, 0.3);
-      border-radius: 24px;
-      padding: 16px;
+      border-radius: 20px;
+      padding: 14px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      gap: 10px;
       cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      transition: transform 0.2s ease;
     }
 
     .choice-card:hover {
-      transform: translateY(-8px) scale(1.03);
-      background: rgba(255, 255, 255, 0.25);
+      transform: scale(1.03);
       border-color: var(--primary-yellow);
-      box-shadow: 0 15px 35px rgba(255, 208, 0, 0.4);
-    }
-
-    .choice-card.correct {
-      border-color: var(--accent-green);
-      background: rgba(16, 185, 129, 0.25);
-      box-shadow: 0 0 30px #10B981;
-    }
-
-    .choice-card.wrong {
-      border-color: #EF4444;
-      background: rgba(239, 68, 68, 0.25);
-      animation: shakeWrong 0.5s ease;
-    }
-
-    @keyframes shakeWrong {
-      0%, 100% { transform: translateX(0); }
-      20%, 60% { transform: translateX(-10px); }
-      40%, 80% { transform: translateX(10px); }
     }
 
     .choice-img-thumb {
-      width: 100px;
-      height: 100px;
-      border-radius: 16px;
+      width: 70px;
+      height: 70px;
+      border-radius: 14px;
       object-fit: cover;
-      border: 3px solid rgba(255, 255, 255, 0.4);
+      margin-bottom: 8px;
     }
 
-    .choice-title {
-      font-size: 1.1rem;
-      font-weight: 900;
-      color: #FFFFFF;
-      text-align: center;
-    }
-
-    .choice-sub {
-      font-size: 0.85rem;
-      color: rgba(255, 255, 255, 0.8);
-    }
-
-    /* Subtitle & VO Display Box */
     .vo-box {
-      padding: 16px 28px;
+      padding: 16px 24px;
       background: rgba(0, 0, 0, 0.75);
       backdrop-filter: blur(12px);
-      border-top: 1px solid rgba(255, 255, 255, 0.15);
       display: flex;
       align-items: center;
       gap: 16px;
-      min-height: 90px;
+      min-height: 85px;
       z-index: 20;
     }
 
     .mascot-avatar {
-      width: 54px;
-      height: 54px;
+      width: 50px;
+      height: 50px;
       border-radius: 50%;
       background: var(--primary-yellow);
-      border: 3px solid #FFFFFF;
       overflow: hidden;
       flex-shrink: 0;
-      box-shadow: 0 0 15px rgba(255, 208, 0, 0.6);
     }
 
     .mascot-avatar img {
@@ -528,551 +357,429 @@
       object-fit: cover;
     }
 
-    .vo-text {
+    /* --- View 2: Quiz & Certificate --- */
+    .quiz-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(16px);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 28px;
+      padding: 32px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .option-btn {
+      background: rgba(255, 255, 255, 0.15);
+      border: 2px solid rgba(255, 255, 255, 0.25);
+      border-radius: 20px;
+      padding: 18px;
       font-size: 1.1rem;
+      color: white;
       font-weight: 700;
-      line-height: 1.5;
-      color: #FFFFFF;
-      flex: 1;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s ease;
     }
 
-    .highlight-keyword {
-      color: var(--primary-yellow);
-      font-weight: 900;
-      text-shadow: 0 0 8px rgba(255, 208, 0, 0.5);
+    .option-btn:hover {
+      background: rgba(255, 208, 0, 0.25);
+      border-color: var(--primary-yellow);
     }
 
-    /* Confetti Canvas */
-    #confetti-canvas {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      z-index: 50;
+    .certificate-box {
+      display: none;
+      background: #FFFDF0;
+      color: #1E293B;
+      border: 10px solid #D97706;
+      border-radius: 24px;
+      padding: 40px;
+      text-align: center;
+      box-shadow: 0 0 50px rgba(255, 208, 0, 0.8);
     }
 
-    /* TV Screen Overlay in Scene 1 */
-    .tv-screen {
-      position: absolute;
-      top: 15%;
-      left: 35%;
-      width: 320px;
-      height: 200px;
-      background: #000;
-      border: 12px solid #334155;
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.8);
-      z-index: 5;
-      transition: transform 3s ease;
+    /* --- View 3: Teacher Dashboard --- */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
     }
 
-    .tv-screen.zoom-in {
-      transform: scale(1.4) translateY(20px);
-    }
-
-    .tv-content {
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(45deg, #FF4081, #7C4DFF);
+    .dash-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(16px);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 24px;
+      padding: 24px;
       display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2rem;
-      font-weight: 900;
-      animation: tvColor 2s infinite alternate;
+      flex-direction: column;
+      gap: 16px;
     }
 
-    @keyframes tvColor {
-      0% { filter: hue-rotate(0deg); }
-      100% { filter: hue-rotate(90deg); }
+    /* --- View 4: Poster Card --- */
+    .poster-card {
+      background: linear-gradient(145deg, #1E293B, #0F172A);
+      border: 4px solid #10B981;
+      border-radius: 32px;
+      padding: 36px;
+      text-align: center;
     }
 
-    /* Pinky Promise Scene 4 */
-    .pinky-promise-icon {
-      font-size: 5rem;
-      animation: bounceHeart 1s infinite alternate;
-      margin-bottom: 10px;
-    }
-
-    @keyframes bounceHeart {
-      0% { transform: scale(1); }
-      100% { transform: scale(1.2) rotate(5deg); }
+    @media print {
+      body { background: white; color: black; padding: 0; }
+      .top-nav, .no-print { display: none !important; }
+      .certificate-box, .poster-card { border-color: #047857; background: white; color: black; box-shadow: none; width: 100%; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Live Status Bubble Ticker (Who is doing what) -->
-  <div class="status-ticker-container">
-    <div class="ticker-label">
-      <span>✨ 護眼小夥伴動態</span>
-    </div>
-    <div class="ticker-content" id="ticker-content">
-      <div class="status-bubble"><span class="status-dot"></span>亮亮精靈：正在遠眺綠樹休息 🌳 (已休息 8 分鐘)</div>
-      <div class="status-bubble"><span class="status-dot"></span>小明：公園放風箏踢皮球 🪁 (戶外活動 90 分鐘)</div>
-      <div class="status-bubble"><span class="status-dot warning"></span>莉莉：看故事書滿 25 分鐘 ⏰ (準備休息)</div>
-      <div class="status-bubble"><span class="status-dot"></span>阿強：戶外曬太陽能量滿格 ☀️ (已滿 120 分鐘)</div>
-      <div class="status-bubble"><span class="status-dot"></span>美美：打勾勾守護靈魂之窗 🤙</div>
+  <!-- Top Unified Navigation Header -->
+  <div class="top-nav">
+    <div class="brand-title">✨ 亮亮精靈護眼大冒險</div>
+    <div class="tab-buttons">
+      <button class="tab-btn active" onclick="showTab('animation')">🎬 冒險動畫與互動</button>
+      <button class="tab-btn" onclick="showTab('quiz')">📝 護眼小勇士測驗</button>
+      <button class="tab-btn" onclick="showTab('dashboard')">🏫 教師/家長專區</button>
+      <button class="tab-btn" style="background: rgba(16,185,129,0.2); color: #10B981;" onclick="showTab('poster')">📲 學生掃碼與海報</button>
     </div>
   </div>
 
-  <!-- Main Animation & Game Theater -->
-  <div class="app-container">
-    <canvas id="confetti-canvas"></canvas>
-
-    <!-- Header Navigation -->
-    <div class="header-bar">
-      <div class="title-group">
-        <h1>亮亮精靈的眼球大冒險</h1>
-        <nav style="display: flex; gap: 8px; margin-left: 15px;">
-          <a href="index.html" style="color: #FFD000; text-decoration: none; font-weight: 700; font-size: 0.85rem; padding: 4px 10px; background: rgba(255,208,0,0.2); border-radius: 12px;">🎬 冒險動畫</a>
-          <a href="learning_quiz.html" style="color: #FFFFFF; text-decoration: none; font-weight: 700; font-size: 0.85rem; padding: 4px 10px; background: rgba(255,255,255,0.1); border-radius: 12px;">📝 護眼小測驗</a>
-          <a href="teacher_dashboard.html" style="color: #FFFFFF; text-decoration: none; font-weight: 700; font-size: 0.85rem; padding: 4px 10px; background: rgba(255,255,255,0.1); border-radius: 12px;">🏫 教師專區</a>
-          <a href="classroom_poster.html" style="color: #10B981; text-decoration: none; font-weight: 700; font-size: 0.85rem; padding: 4px 10px; background: rgba(16,185,129,0.2); border-radius: 12px;">📲 學生掃碼</a>
-        </nav>
-      </div>
-      <div class="scene-badges">
-        <div class="badge active" onclick="switchScene(1)">第一幕：霧濛濛怪獸</div>
-        <div class="badge" onclick="switchScene(2)">第二幕：護眼 3010</div>
-        <div class="badge" onclick="switchScene(3)">第三幕：太陽光 120</div>
-        <div class="badge" onclick="switchScene(4)">第四幕：打勾勾約定</div>
-      </div>
-      <div class="controls-group">
-        <button class="btn-icon" id="btn-audio" onclick="toggleAudio()" title="開啟/靜音語音">🔊</button>
-        <button class="btn-icon" onclick="restartCurrentScene()" title="重新播放本幕">🔄</button>
+  <!-- TAB 1: ANIMATION THEATER -->
+  <div class="app-view active" id="view-animation">
+    <div class="status-ticker-container">
+      <div class="ticker-label">✨ 護眼小夥伴動態</div>
+      <div class="ticker-content">
+        <div class="status-bubble">亮亮精靈：正在遠眺綠樹休息 🌳 (已休息 8 分鐘)</div>
+        <div class="status-bubble">小明：公園放風箏踢皮球 🪁 (戶外活動 90 分鐘)</div>
+        <div class="status-bubble">莉莉：看故事書滿 25 分鐘 ⏰ (準備休息)</div>
+        <div class="status-bubble">阿強：戶外曬太陽能量滿格 ☀️ (已滿 120 分鐘)</div>
       </div>
     </div>
 
-    <!-- Viewport Screen -->
-    <div class="viewport" id="viewport">
-      <div class="sunbeam-overlay" id="sunbeam-overlay"></div>
-
-      <!-- Mascot Element -->
-      <div class="mascot-container" id="mascot-box">
-        <div class="antenna-glow"></div>
-        <img src="assets/liang_liang.jpg" alt="亮亮精靈" class="mascot-img" id="mascot-img">
-      </div>
-
-      <!-- Scene 1: Living Room Myopia Blur & Monster -->
-      <div class="scene-bg active" id="scene1-bg" style="background: radial-gradient(circle, #2A2D3E 0%, #11131F 100%);">
-        <div class="tv-screen" id="tv-screen">
-          <div class="tv-content">📺 卡通節目</div>
+    <div class="theater-container">
+      <div class="theater-header">
+        <div class="scene-badges">
+          <div class="badge active" onclick="switchScene(1)">第一幕：霧濛濛怪獸</div>
+          <div class="badge" onclick="switchScene(2)">第二幕：護眼 3010</div>
+          <div class="badge" onclick="switchScene(3)">第三幕：太陽光 120</div>
+          <div class="badge" onclick="switchScene(4)">第四幕：打勾勾約定</div>
         </div>
-        <div class="monster-container" id="fog-monster" style="opacity: 0; transform: scale(0.5);">
-          <img src="assets/fog_monster.jpg" alt="霧濛濛怪獸" class="monster-img">
+        <div>
+          <button class="tab-btn" onclick="toggleAudio()">🔊 語音/音效</button>
         </div>
       </div>
 
-      <!-- Scene 2: 3010 Clock Magic -->
-      <div class="scene-bg" id="scene2-bg" style="background: radial-gradient(circle, #1E293B 0%, #0F172A 100%);">
-        <div class="clock-wrapper">
-          <div class="jelly-clock" id="jelly-clock">
-            <div class="clock-hand" id="clock-hand"></div>
-            <div class="clock-center"></div>
-          </div>
-          <div class="clock-timer-text" id="clock-text">00 : 00</div>
+      <div class="viewport">
+        <!-- Mascot Element -->
+        <div class="mascot-container" id="mascot-box">
+          <img src="assets/liang_liang.jpg" alt="亮亮精靈" class="mascot-img">
         </div>
-      </div>
 
-      <!-- Scene 3: Outdoor Park Sunshine Magic (120 Mins) -->
-      <div class="scene-bg" id="scene3-bg" style="background: url('assets/park_kite.jpg') center/cover no-repeat;">
-        <div class="solar-bar-container">
-          <div class="solar-title">
-            <span>☀️ 太陽能量條 (戶外 120 分鐘)</span>
-            <span id="solar-percent">0%</span>
-          </div>
-          <div class="solar-track">
-            <div class="solar-fill" id="solar-fill"></div>
+        <!-- Scene 1 -->
+        <div class="scene-bg active" id="scene1-bg" style="background: radial-gradient(circle, #2A2D3E 0%, #11131F 100%);">
+          <div class="monster-container" id="fog-monster" style="opacity: 0; transform: scale(0.5);">
+            <img src="assets/fog_monster.jpg" alt="霧濛濛怪獸" class="monster-img">
           </div>
         </div>
+
+        <!-- Scene 2 -->
+        <div class="scene-bg" id="scene2-bg" style="background: radial-gradient(circle, #1E293B 0%, #0F172A 100%);">
+          <div class="clock-wrapper">
+            <div class="jelly-clock">
+              <div class="clock-hand" id="clock-hand"></div>
+            </div>
+            <div class="clock-timer-text" id="clock-text">00 : 00</div>
+          </div>
+        </div>
+
+        <!-- Scene 3 -->
+        <div class="scene-bg" id="scene3-bg" style="background: url('assets/park_kite.jpg') center/cover no-repeat;"></div>
+
+        <!-- Scene 4 -->
+        <div class="scene-bg" id="scene4-bg" style="background: radial-gradient(circle, #311B92 0%, #0D47A1 100%); text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+          <div style="font-size: 5rem;">🤙✨💖</div>
+          <h2 style="font-size: 2.2rem; color: #FFD000; margin: 0;">我們打勾勾約定！</h2>
+          <p style="font-size: 1.2rem; color: #E2E8F0;">看書坐端正 • 不靠近螢幕 • 多去外面玩</p>
+        </div>
+
+        <!-- Interactive Choice Panel -->
+        <div class="interactive-panel hidden" id="interactive-panel">
+          <div class="choice-card" onclick="handleChoice('A')">
+            <img src="assets/fog_monster.jpg" class="choice-img-thumb" alt="A">
+            <div style="font-weight: 900; color: #FFD000;">A: 繼續看螢幕</div>
+            <div style="font-size: 0.85rem; color: #CBD5E1;">疲累的眼睛</div>
+          </div>
+          <div class="choice-card" onclick="handleChoice('B')">
+            <img src="assets/green_tree.jpg" class="choice-img-thumb" alt="B">
+            <div style="font-weight: 900; color: #10B981;">B: 望向遠方綠樹</div>
+            <div style="font-size: 0.85rem; color: #CBD5E1;">開心的眼睛</div>
+          </div>
+        </div>
       </div>
 
-      <!-- Scene 4: Happy Ending Pinky Promise -->
-      <div class="scene-bg" id="scene4-bg" style="background: radial-gradient(circle, #311B92 0%, #0D47A1 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
-        <div class="pinky-promise-icon">🤙✨💖</div>
-        <h2 style="font-size: 2.2rem; color: #FFD000; margin: 0; text-shadow: 0 4px 20px rgba(255,208,0,0.6);">我們打勾勾約定！</h2>
-        <p style="font-size: 1.2rem; color: #E2E8F0; margin-top: 10px;">看書坐端正 • 不靠近螢幕 • 多去外面玩</p>
-      </div>
-
-      <!-- Interactive Option Buttons -->
-      <div class="interactive-panel hidden" id="interactive-panel">
-        <div class="choice-card" id="choice-a" onclick="handleChoice('A')">
-          <img id="img-choice-a" src="assets/fog_monster.jpg" class="choice-img-thumb" alt="選項 A">
-          <div class="choice-title" id="title-choice-a">A: 繼續看螢幕</div>
-          <div class="choice-sub" id="sub-choice-a">疲累的眼睛</div>
-        </div>
-        <div class="choice-card" id="choice-b" onclick="handleChoice('B')">
-          <img id="img-choice-b" src="assets/green_tree.jpg" class="choice-img-thumb" alt="選項 B">
-          <div class="choice-title" id="title-choice-b">B: 望向遠方綠樹</div>
-          <div class="choice-sub" id="sub-choice-b">開心的眼睛</div>
-        </div>
+      <div class="vo-box">
+        <div class="mascot-avatar"><img src="assets/liang_liang.jpg" alt="亮亮精靈"></div>
+        <div style="font-size: 1.1rem; font-weight: 700;" id="vo-text">準備好了嗎？點擊上方按鈕開始【亮亮精靈的眼球大冒險】吧！</div>
       </div>
     </div>
+  </div>
 
-    <!-- Bottom Subtitle Box -->
-    <div class="vo-box">
-      <div class="mascot-avatar">
-        <img src="assets/liang_liang.jpg" alt="亮亮精靈頭像">
+  <!-- TAB 2: QUIZ & CERTIFICATE -->
+  <div class="app-view" id="view-quiz">
+    <div class="quiz-card" id="start-quiz-card">
+      <h2 style="color: var(--primary-yellow); margin-top: 0;">🛡️ 歡迎來到護眼小勇士闖關考驗！</h2>
+      <p style="font-size: 1.1rem; color: #E2E8F0;">請輸入你的姓名，挑戰 5 道護眼生活大考驗！全對即可解鎖【亮亮精靈榮譽證書】！</p>
+      <input type="text" id="quiz-student-name" class="option-btn" style="width: 100%; margin: 15px 0;" placeholder="請輸入姓名 (例：王小明)" value="護眼智慧小達人">
+      <button class="option-btn" style="background: linear-gradient(90deg, #10B981, #059669); text-align: center; width: 100%; font-size: 1.2rem;" onclick="startQuiz()">🚀 開始闖關測驗</button>
+    </div>
+
+    <div class="quiz-card" id="main-quiz-card" style="display: none;">
+      <div style="display: flex; justify-content: space-between;">
+        <span id="quiz-progress" style="color: #94A3B8;">進度：1 / 5</span>
+        <span id="quiz-score" style="color: var(--primary-cyan); font-weight: 900;">得分：0 分</span>
       </div>
-      <div class="vo-text" id="vo-text">
-        準備好了嗎？點擊畫面或按上方按鈕開始【亮亮精靈的眼球大冒險】吧！
+      <h2 id="quiz-q-text" style="color: var(--primary-yellow);">題目載入中...</h2>
+      <div class="options-grid" id="quiz-options"></div>
+      <div id="quiz-explanation" style="display: none; padding: 15px; margin-top: 15px; border-radius: 16px; font-weight: 700;"></div>
+      <button id="quiz-next-btn" class="option-btn" style="display: none; margin-top: 15px; background: #10B981;" onclick="nextQuizQuestion()">下一題 ➔</button>
+    </div>
+
+    <div class="certificate-box" id="certificate-box">
+      <div style="font-size: 2.4rem; color: #B45309; font-weight: 900;">🏆 護眼小勇士榮譽證書</div>
+      <p style="font-size: 1.2rem; color: #475569;">恭喜順利通過 100 分護眼關卡考驗！</p>
+      <div>茲證明護眼勇士</div>
+      <div style="font-size: 2.2rem; color: #047857; font-weight: 900; margin: 10px 0;" id="cert-student-name">王小明</div>
+      <p style="font-size: 1.15rem; line-height: 1.8; color: #334155;">
+        熟記「<b>看書看電視 30 分鐘休息 10 分鐘</b>」與「<b>每日戶外活動 120 分鐘</b>」護眼密碼！特頒此證！
+      </p>
+      <button class="no-print" onclick="window.print()" style="padding: 12px 30px; background: #047857; color: white; border: none; border-radius: 25px; font-size: 1.1rem; font-weight: 900; cursor: pointer; margin-top: 15px;">🖨️ 列印/儲存證書 (Ctrl+P)</button>
+    </div>
+  </div>
+
+  <!-- TAB 3: TEACHER DASHBOARD -->
+  <div class="app-view" id="view-dashboard">
+    <div class="dashboard-grid">
+      <div class="dash-card">
+        <div style="font-size: 1.3rem; font-weight: 900; color: var(--primary-yellow);">⏰ 課堂 3010 護眼計時器</div>
+        <p style="color: #94A3B8; margin: 0;">自動倒數 30 分鐘提醒學生遠眺綠樹休息 10 分鐘。</p>
+        <div style="font-size: 3rem; font-weight: 900; color: var(--primary-cyan); text-align: center; font-family: monospace;" id="dash-timer">30:00</div>
+        <button class="tab-btn" style="padding: 14px; font-size: 1.1rem; background: #10B981;" onclick="toggleClassTimer()" id="btn-timer">▶️ 開始課堂 30 分鐘計時</button>
+      </div>
+
+      <div class="dash-card">
+        <div style="font-size: 1.3rem; font-weight: 900; color: var(--primary-yellow);">📋 每日護眼好習慣打卡</div>
+        <label><input type="checkbox" checked> 看書坐姿端正，保持 35~40 公分距離</label>
+        <label><input type="checkbox"> 用眼 30 分鐘，遠眺 10 分鐘 (護眼 3010)</label>
+        <label><input type="checkbox"> 每日戶外活動、曬太陽滿 120 分鐘</label>
+        <label><input type="checkbox"> 不在睡前暗處觀看手機與平板螢幕</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 4: POSTER -->
+  <div class="app-view" id="view-poster">
+    <div class="poster-card">
+      <div style="background: #FFD000; color: #0F172A; font-weight: 900; padding: 6px 20px; border-radius: 20px; display: inline-block;">✨ 兒童護眼互動體驗平台</div>
+      <h1 style="font-size: 2.2rem; margin: 12px 0;">亮亮精靈的眼球大冒險</h1>
+      <p style="color: #94A3B8;">請用平板或手機相機，掃描下方 QR Code 立即連線入場！</p>
+      <div style="background: white; padding: 15px; border-radius: 20px; display: inline-block; margin: 15px 0;">
+        <img src="assets/eye_adventure_qr.png" style="width: 250px; height: auto;" alt="QR Code">
+      </div>
+      <div class="no-print" style="margin-top: 15px;">
+        <button class="tab-btn" style="background: #10B981; padding: 12px 30px; font-size: 1.1rem;" onclick="window.print()">🖨️ 列印 A4 課堂海報 (Ctrl+P)</button>
       </div>
     </div>
   </div>
 
   <script>
-    // Audio Sound Effects Synthesizer (Web Audio API)
+    // Tab Navigation Switcher
+    function showTab(tabName) {
+      document.querySelectorAll('.app-view').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+
+      if (tabName === 'animation') {
+        document.getElementById('view-animation').classList.add('active');
+      } else if (tabName === 'quiz') {
+        document.getElementById('view-quiz').classList.add('active');
+      } else if (tabName === 'dashboard') {
+        document.getElementById('view-dashboard').classList.add('active');
+      } else if (tabName === 'poster') {
+        document.getElementById('view-poster').classList.add('active');
+      }
+
+      event.target.classList.add('active');
+    }
+
+    // Audio Synthesizer
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     let audioEnabled = true;
+    function toggleAudio() {
+      audioEnabled = !audioEnabled;
+      alert(audioEnabled ? "🔊 語音與音效已開啟" : "🔇 語音與音效已靜音");
+    }
 
     function playSound(type) {
       if (!audioEnabled) return;
       if (audioCtx.state === 'suspended') audioCtx.resume();
-
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
       osc.connect(gain);
       gain.connect(audioCtx.destination);
-
       const now = audioCtx.currentTime;
 
-      if (type === 'wobble') {
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(300, now);
-        osc.frequency.exponentialRampToValueAtTime(150, now + 0.4);
+      if (type === 'correct') {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(523.25, now);
+        osc.frequency.setValueAtTime(659.25, now + 0.1);
         gain.gain.setValueAtTime(0.3, now);
         gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
         osc.start(now);
         osc.stop(now + 0.4);
-      } else if (type === 'correct') {
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(523.25, now); // C5
-        osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
-        osc.frequency.setValueAtTime(783.99, now + 0.2); // G5
-        osc.frequency.setValueAtTime(1046.50, now + 0.3); // C6
-        gain.gain.setValueAtTime(0.4, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.6);
-        osc.start(now);
-        osc.stop(now + 0.6);
-      } else if (type === 'wrong') {
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(200, now);
-        osc.frequency.setValueAtTime(140, now + 0.2);
-        gain.gain.setValueAtTime(0.3, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
-        osc.start(now);
-        osc.stop(now + 0.5);
-      } else if (type === 'sunbeam') {
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(400, now);
-        osc.frequency.exponentialRampToValueAtTime(1200, now + 0.8);
-        gain.gain.setValueAtTime(0.2, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.8);
-        osc.start(now);
-        osc.stop(now + 0.8);
       }
     }
 
-    // VoiceOver TTS Engine (SpeechSynthesis)
-    function speakText(text, callback) {
-      document.getElementById('vo-text').innerHTML = text;
-      
-      if (!audioEnabled || !('speechSynthesis' in window)) {
-        if (callback) setTimeout(callback, 3000);
-        return;
-      }
-
-      window.speechSynthesis.cancel();
-      // Remove HTML tags for TTS
-      const cleanText = text.replace(/<[^>]*>/g, '');
-      const utterance = new SpeechSynthesisUtterance(cleanText);
-      utterance.lang = 'zh-TW';
-      utterance.rate = 1.0;
-      utterance.pitch = 1.25; // Cute kid friendly mascot pitch
-
-      utterance.onend = () => {
-        if (callback) callback();
-      };
-
-      utterance.onerror = () => {
-        if (callback) callback();
-      };
-
-      window.speechSynthesis.speak(utterance);
-    }
-
-    function toggleAudio() {
-      audioEnabled = !audioEnabled;
-      document.getElementById('btn-audio').innerText = audioEnabled ? '🔊' : '🔇';
-      if (!audioEnabled && window.speechSynthesis) {
-        window.speechSynthesis.cancel();
-      }
-    }
-
-    // Scene State Machine
-    let currentScene = 1;
-    let clockInterval = null;
-
-    function updateBadges(sceneNum) {
-      const badges = document.querySelectorAll('.badge');
-      badges.forEach((b, idx) => {
-        if (idx + 1 === sceneNum) b.classList.add('active');
-        else b.classList.remove('active');
-      });
-    }
-
-    function hideAllPanels() {
-      document.getElementById('interactive-panel').classList.add('hidden');
-      document.getElementById('sunbeam-overlay').classList.remove('active');
-      const monster = document.getElementById('fog-monster');
-      monster.style.opacity = '0';
-      monster.style.transform = 'scale(0.5)';
-      document.getElementById('scene1-bg').classList.remove('blur-myopia');
-      document.getElementById('tv-screen').classList.remove('zoom-in');
-      if (clockInterval) clearInterval(clockInterval);
-    }
-
+    // Animation Scene Switcher
     function switchScene(sceneNum) {
-      currentScene = sceneNum;
-      updateBadges(sceneNum);
-      hideAllPanels();
+      document.querySelectorAll('.scene-bg').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.badge').forEach(el => el.classList.remove('active'));
 
-      document.querySelectorAll('.scene-bg').forEach((el, idx) => {
-        if (idx + 1 === sceneNum) el.classList.add('active');
-        else el.classList.remove('active');
+      document.getElementById(`scene${sceneNum}-bg`).classList.add('active');
+      document.querySelectorAll('.badge')[sceneNum - 1].classList.add('active');
+
+      const voText = document.getElementById('vo-text');
+      const panel = document.getElementById('interactive-panel');
+
+      if (sceneNum === 1) {
+        voText.innerHTML = "第一幕：哎呀！你看電視看太久了，視力開始模糊，【霧濛濛怪獸】出現了！快選一個行動拯救眼睛吧！";
+        document.getElementById('fog-monster').style.opacity = '1';
+        document.getElementById('fog-monster').style.transform = 'scale(1)';
+        panel.classList.remove('hidden');
+      } else if (sceneNum === 2) {
+        voText.innerHTML = "第二幕：開啟【護眼 3010 魔法卡】！每看電視 30 分鐘，記得要遠眺綠樹休息 10 分鐘喔！";
+        panel.classList.add('hidden');
+      } else if (sceneNum === 3) {
+        voText.innerHTML = "第三幕：開啟【太陽光 120 魔法】！每天去公園活動 120 分鐘，陽光會幫眼睛補充強大抵抗力！";
+        panel.classList.add('hidden');
+      } else if (sceneNum === 4) {
+        voText.innerHTML = "第四幕：太棒了！我們和小夥伴一起打勾勾約定，保持好習慣，當個靈魂之窗的小守護者！";
+        panel.classList.add('hidden');
+        playSound('correct');
+      }
+    }
+
+    function handleChoice(choice) {
+      if (choice === 'B') {
+        playSound('correct');
+        alert("🎉 選對了！望向遠方綠樹，霧濛濛怪獸被打跑了！");
+        switchScene(2);
+      } else {
+        alert("❌ 繼續看螢幕會讓怪獸越來越大隻喔！快選擇 B 望向遠方綠樹吧！");
+      }
+    }
+
+    // Quiz Logic
+    const quizQuestions = [
+      { q: "第 1 題：看電視或讀書滿 30 分鐘，應該休息幾分鐘？", opts: ["A. 1 分鐘", "B. 10 分鐘 (護眼 3010)", "C. 不用休息", "D. 60 分鐘"], ans: 1, exp: "🎯 答對了！護眼 3010 密碼提醒我們每用眼 30 分鐘就要休息 10 分鐘！" },
+      { q: "第 2 題：每天戶外活動曬太陽多久，最能幫助眼睛預防近視？", opts: ["A. 10 分鐘", "B. 30 分鐘", "C. 2 小時 (戶外 120)", "D. 5 小時"], ans: 2, exp: "☀️ 太棒了！每日戶外活動 120 分鐘是護眼關鍵！" },
+      { q: "第 3 題：看書寫作業時，眼睛與書本應保持多少距離？", opts: ["A. 5 公分", "B. 35~40 公分 (一隻手臂距離)", "C. 貼在桌上", "D. 越多越好"], ans: 1, exp: "📖 正確！保持 35~40 公分距離，眼睛最舒服！" },
+      { q: "第 4 題：當『霧濛濛怪獸』出現時，代表眼睛怎麼了？", opts: ["A. 眼睛很有精神", "B. 眼睛累了、視力變得模糊", "C. 眼睛想吃冰淇淋", "D. 外面在下雨"], ans: 1, exp: "👁️ 完全答對！視力模糊就要快去遠眺綠樹休息！" },
+      { q: "第 5 題：下列哪一個是壞習慣，會傷害我們的視力？", opts: ["A. 趴在床上暗處看手機", "B. 到公園放風箏", "C. 用眼 30 分鐘遠眺綠樹", "D. 多吃深綠色蔬菜"], ans: 0, exp: "🚫 正確！暗處看螢幕會刺激黃斑部，絕對要避免！" }
+    ];
+
+    let currentQ = 0, score = 0, qAnswered = false;
+
+    function startQuiz() {
+      const name = document.getElementById('quiz-student-name').value.trim() || '護眼智慧小達人';
+      document.getElementById('cert-student-name').innerText = name;
+      document.getElementById('start-quiz-card').style.display = 'none';
+      document.getElementById('main-quiz-card').style.display = 'block';
+      renderQuizQuestion();
+    }
+
+    function renderQuizQuestion() {
+      qAnswered = false;
+      const data = quizQuestions[currentQ];
+      document.getElementById('quiz-progress').innerText = `進度：${currentQ + 1} / ${quizQuestions.length}`;
+      document.getElementById('quiz-q-text').innerText = data.q;
+      document.getElementById('quiz-explanation').style.display = 'none';
+      document.getElementById('quiz-next-btn').style.display = 'none';
+
+      const container = document.getElementById('quiz-options');
+      container.innerHTML = '';
+      data.opts.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.innerText = opt;
+        btn.onclick = () => selectQuizOption(idx, btn);
+        container.appendChild(btn);
       });
-
-      if (sceneNum === 1) playScene1();
-      else if (sceneNum === 2) playScene2();
-      else if (sceneNum === 3) playScene3();
-      else if (sceneNum === 4) playScene4();
     }
 
-    function restartCurrentScene() {
-      switchScene(currentScene);
+    function selectQuizOption(idx, btn) {
+      if (qAnswered) return;
+      qAnswered = true;
+      const data = quizQuestions[currentQ];
+      const exp = document.getElementById('quiz-explanation');
+
+      if (idx === data.ans) {
+        score += 20;
+        playSound('correct');
+        exp.style.background = 'rgba(16, 185, 129, 0.3)';
+        exp.style.color = '#A7F3D0';
+        exp.innerText = data.exp;
+      } else {
+        exp.style.background = 'rgba(239, 68, 68, 0.3)';
+        exp.style.color = '#FCA5A5';
+        exp.innerText = "❌ 答錯囉！" + data.exp;
+      }
+
+      exp.style.display = 'block';
+      document.getElementById('quiz-score').innerText = `得分：${score} 分`;
+      document.getElementById('quiz-next-btn').style.display = 'block';
     }
 
-    // Scene 1 Logic
-    function playScene1() {
-      const mascot = document.getElementById('mascot-box');
-      mascot.style.left = '10%';
-      mascot.style.transform = 'scale(1)';
-
-      const tv = document.getElementById('tv-screen');
-      const scene1Bg = document.getElementById('scene1-bg');
-      const monster = document.getElementById('fog-monster');
-
-      speakText("【第一幕：危機來臨！】亮亮精靈正在客廳看電視...", () => {
-        tv.classList.add('zoom-in');
-        setTimeout(() => {
-          scene1Bg.classList.add('blur-myopia');
-          monster.style.opacity = '1';
-          monster.style.transform = 'scale(1)';
-          playSound('wobble');
-
-          speakText("<span class='highlight-keyword'>「哎呀！前面的玩具和電視怎麼都變得霧霧的、看不清楚了？嗚嗚，我的眼睛好累喔。原來是『霧濛濛怪獸』來搗蛋了！小朋友，快來幫亮亮一起把眼睛變亮吧！」</span>", () => {
-            setTimeout(() => switchScene(2), 2000);
-          });
-        }, 1500);
-      });
+    function nextQuizQuestion() {
+      currentQ++;
+      if (currentQ < quizQuestions.length) {
+        renderQuizQuestion();
+      } else {
+        document.getElementById('main-quiz-card').style.display = 'none';
+        document.getElementById('certificate-box').style.display = 'block';
+      }
     }
 
-    // Scene 2 Logic
-    function playScene2() {
-      const mascot = document.getElementById('mascot-box');
-      mascot.style.left = '12%';
-
-      const clockHand = document.getElementById('clock-hand');
-      const clockText = document.getElementById('clock-text');
-      const jellyClock = document.getElementById('jelly-clock');
-
-      let minutes = 0;
-      clockHand.style.transform = 'rotate(0deg)';
-      clockText.innerText = '00 : 00';
-
-      speakText("【第二幕：護眼 3010 魔法】發光大時鐘開始轉動了...", () => {
-        clockInterval = setInterval(() => {
-          minutes += 5;
-          const degrees = (minutes / 60) * 360;
-          clockHand.style.transform = `rotate(${degrees}deg)`;
-          clockText.innerText = `00 : ${minutes < 10 ? '0' + minutes : minutes}`;
-
-          if (minutes >= 30) {
-            clearInterval(clockInterval);
-            jellyClock.classList.add('jelly-wobble');
-            playSound('wobble');
-
-            speakText("「大鐘響起囉！我們已經看電視看好久了。現在請小朋友幫忙，點選哪一個圖案，才能讓眼睛休息呢？」", () => {
-              showScene2Choices();
-            });
+    // Timer Logic
+    let timerSecs = 30 * 60, timerRunning = false, timerInt = null;
+    function toggleClassTimer() {
+      const btn = document.getElementById('btn-timer');
+      if (!timerRunning) {
+        timerRunning = true;
+        btn.innerText = '⏸️ 暫停計時';
+        btn.style.background = '#EF4444';
+        timerInt = setInterval(() => {
+          if (timerSecs > 0) {
+            timerSecs--;
+            const m = Math.floor(timerSecs / 60), s = timerSecs % 60;
+            document.getElementById('dash-timer').innerText = `${m < 10 ? '0'+m : m}:${s < 10 ? '0'+s : s}`;
+          } else {
+            clearInterval(timerInt);
+            playSound('correct');
+            alert("🔔 30 分鐘到了！請全班站起來遠眺綠樹休息 10 分鐘喔！");
           }
-        }, 300);
-      });
-    }
-
-    function showScene2Choices() {
-      const panel = document.getElementById('interactive-panel');
-      document.getElementById('img-choice-a').src = 'assets/fog_monster.jpg';
-      document.getElementById('title-choice-a').innerText = 'A: 繼續看螢幕';
-      document.getElementById('sub-choice-a').innerText = '一隻疲累的眼睛 😵';
-
-      document.getElementById('img-choice-b').src = 'assets/green_tree.jpg';
-      document.getElementById('title-choice-b').innerText = 'B: 望向遠方綠樹';
-      document.getElementById('sub-choice-b').innerText = '一隻開心的眼睛 🌳';
-
-      panel.classList.remove('hidden');
-    }
-
-    // Scene 3 Logic
-    function playScene3() {
-      const mascot = document.getElementById('mascot-box');
-      mascot.style.left = '15%';
-
-      const fill = document.getElementById('solar-fill');
-      const percent = document.getElementById('solar-percent');
-      fill.style.width = '0%';
-      percent.innerText = '0%';
-
-      const monster = document.getElementById('fog-monster');
-      monster.style.opacity = '1';
-      monster.style.right = '15%';
-      monster.style.transform = 'scale(0.9)';
-      document.getElementById('scene3-bg').appendChild(monster);
-
-      speakText("【第三幕：太陽光魔法陣】來到公園了！快幫亮亮選擇好玩的東西。", () => {
-        showScene3Choices();
-      });
-    }
-
-    function showScene3Choices() {
-      const panel = document.getElementById('interactive-panel');
-      document.getElementById('img-choice-a').src = 'assets/fog_monster.jpg';
-      document.getElementById('title-choice-a').innerText = 'A: 躺草地上玩平板';
-      document.getElementById('sub-choice-a').innerText = '眼睛近視加重 📱';
-
-      document.getElementById('img-choice-b').src = 'assets/park_kite.jpg';
-      document.getElementById('title-choice-b').innerText = 'B: 放風箏與踢皮球';
-      document.getElementById('sub-choice-b').innerText = '大太陽下戶外活動 🪁';
-
-      panel.classList.remove('hidden');
-    }
-
-    // Choice Handler
-    function handleChoice(option) {
-      const cardA = document.getElementById('choice-a');
-      const cardB = document.getElementById('choice-b');
-
-      if (currentScene === 2) {
-        if (option === 'A') {
-          cardA.classList.add('wrong');
-          playSound('wrong');
-          setTimeout(() => cardA.classList.remove('wrong'), 600);
-          speakText("「哎呀，眼睛更累了，霧濛濛怪獸變大了！再選一次，看哪裡可以休息呢？」");
-        } else if (option === 'B') {
-          cardB.classList.add('correct');
-          playSound('correct');
-          triggerConfetti();
-          document.getElementById('interactive-panel').classList.add('hidden');
-          
-          speakText("<span class='highlight-keyword'>「答對了！看書看電視 30 分鐘，就要讓眼睛休息 10 分鐘，看看遠處喔！你太棒了！」</span>", () => {
-            setTimeout(() => switchScene(3), 2000);
-          });
-        }
-      } else if (currentScene === 3) {
-        if (option === 'A') {
-          cardA.classList.add('wrong');
-          playSound('wrong');
-          setTimeout(() => cardA.classList.remove('wrong'), 600);
-          speakText("「哎呀！在戶外玩平板眼睛會受傷喔，太陽魔法無法集滿！再選一次吧！」");
-        } else if (option === 'B') {
-          cardB.classList.add('correct');
-          playSound('correct');
-          playSound('sunbeam');
-          document.getElementById('interactive-panel').classList.add('hidden');
-
-          // Solar Energy Fill Animation
-          document.getElementById('solar-fill').style.width = '100%';
-          document.getElementById('solar-percent').innerText = '100%';
-          document.getElementById('sunbeam-overlay').classList.add('active');
-
-          const monster = document.getElementById('fog-monster');
-          monster.style.transition = 'all 1.5s ease';
-          monster.style.opacity = '0';
-          monster.style.transform = 'scale(0.1) rotate(180deg)';
-
-          triggerConfetti();
-
-          speakText("<span class='highlight-keyword'>「耶！答對了！每天去戶外活動、曬曬太陽 2 個小時（120分鐘），太陽光會保護我們的眼睛，讓近視怪獸不敢來喔！」</span>", () => {
-            setTimeout(() => switchScene(4), 2500);
-          });
-        }
+        }, 1000);
+      } else {
+        timerRunning = false;
+        clearInterval(timerInt);
+        btn.innerText = '▶️ 繼續計時';
+        btn.style.background = '#10B981';
       }
     }
-
-    // Scene 4 Logic
-    function playScene4() {
-      const mascot = document.getElementById('mascot-box');
-      mascot.style.left = '50%';
-      mascot.style.transform = 'translateX(-50%) scale(1.2)';
-
-      playSound('correct');
-      triggerConfetti();
-
-      speakText("<span class='highlight-keyword'>「我們打勾勾，看書坐端正、不靠近螢幕、多去外面玩，一起保護亮晶晶的眼睛喔！」</span>");
-    }
-
-    // Confetti Engine
-    function triggerConfetti() {
-      const canvas = document.getElementById('confetti-canvas');
-      const ctx = canvas.getContext('2d');
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
-
-      const particles = [];
-      const colors = ['#FFD000', '#00E5FF', '#10B981', '#FF4081', '#FFFFFF'];
-
-      for (let i = 0; i < 80; i++) {
-        particles.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height - canvas.height,
-          size: Math.random() * 8 + 4,
-          color: colors[Math.floor(Math.random() * colors.length)],
-          vy: Math.random() * 3 + 2,
-          vx: Math.random() * 2 - 1,
-          rot: Math.random() * 360
-        });
-      }
-
-      function animate() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        let alive = false;
-        particles.forEach(p => {
-          p.y += p.vy;
-          p.x += p.vx;
-          p.rot += 4;
-          if (p.y < canvas.height) alive = true;
-
-          ctx.save();
-          ctx.translate(p.x, p.y);
-          ctx.rotate((p.rot * Math.PI) / 180);
-          ctx.fillStyle = p.color;
-          ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
-          ctx.restore();
-        });
-
-        if (alive) requestAnimationFrame(animate);
-      }
-      animate();
-    }
-
-    // Auto Start Scene 1 on first click
-    window.addEventListener('load', () => {
-      document.querySelector('.app-container').addEventListener('click', function firstClick() {
-        if (audioCtx.state === 'suspended') audioCtx.resume();
-        this.removeEventListener('click', firstClick);
-      });
-      switchScene(1);
-    });
   </script>
 </body>
 </html>
