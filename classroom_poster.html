@@ -19,7 +19,7 @@
 
     body {
       margin: 0;
-      padding: 0;
+      padding: 20px;
       font-family: 'Fredoka', 'Noto Sans TC', sans-serif;
       background: #0F172A;
       color: #FFFFFF;
@@ -30,13 +30,51 @@
       justify-content: center;
     }
 
+    .nav-bar {
+      width: 100%;
+      max-width: 700px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(10px);
+      padding: 12px 24px;
+      border-radius: 50px;
+      margin-bottom: 24px;
+      border: 1px solid rgba(255,255,255,0.15);
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .nav-btn {
+      color: white;
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      background: rgba(255,255,255,0.1);
+      transition: all 0.2s ease;
+    }
+
+    .nav-btn.active, .nav-btn:hover {
+      background: #00E5FF;
+      color: #12131C;
+    }
+
     .poster-card {
-      width: 90%;
+      width: 100%;
       max-width: 700px;
       background: linear-gradient(145deg, #1E293B, #0F172A);
       border: 4px solid #10B981;
       border-radius: 32px;
-      padding: 40px;
+      padding: 36px 30px;
       text-align: center;
       box-shadow: 0 20px 50px rgba(0,0,0,0.5);
       position: relative;
@@ -47,29 +85,29 @@
       background: #FFD000;
       color: #0F172A;
       font-weight: 900;
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       padding: 8px 24px;
       border-radius: 30px;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
       box-shadow: 0 4px 15px rgba(255, 208, 0, 0.4);
     }
 
     h1 {
-      font-size: 2.5rem;
+      font-size: 2.3rem;
       margin: 10px 0;
       color: #FFFFFF;
       text-shadow: 0 0 20px rgba(0,229,255,0.4);
     }
 
     p.subtitle {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       color: #94A3B8;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
     }
 
     .qr-frame {
       background: #FFFFFF;
-      padding: 20px;
+      padding: 16px;
       border-radius: 24px;
       display: inline-block;
       box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
@@ -77,7 +115,7 @@
     }
 
     .qr-frame img {
-      width: 280px;
+      width: 260px;
       height: auto;
       display: block;
     }
@@ -87,27 +125,34 @@
       border: 2px dashed #38BDF8;
       color: #38BDF8;
       font-family: monospace;
-      font-size: 1.3rem;
+      font-size: 1.15rem;
       font-weight: 700;
-      padding: 12px 24px;
+      padding: 12px 20px;
       border-radius: 16px;
-      margin: 20px auto;
+      margin: 15px auto;
       display: inline-block;
       word-break: break-all;
+      max-width: 90%;
     }
 
     .instructions-grid {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
-      gap: 16px;
-      margin-top: 30px;
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 600px) {
+      .instructions-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     .step-box {
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 16px;
-      padding: 16px;
+      padding: 14px;
     }
 
     .step-num {
@@ -124,47 +169,63 @@
     }
 
     .print-actions {
-      margin-top: 30px;
+      margin-top: 25px;
       display: flex;
-      gap: 16px;
+      gap: 14px;
       justify-content: center;
+      flex-wrap: wrap;
     }
 
     .btn-print {
       background: linear-gradient(90deg, #10B981, #059669);
       color: white;
       border: none;
-      padding: 12px 30px;
+      padding: 12px 24px;
       border-radius: 30px;
-      font-size: 1.1rem;
+      font-size: 1rem;
       font-weight: 700;
       cursor: pointer;
       box-shadow: 0 4px 15px rgba(16,185,129,0.4);
+      transition: transform 0.2s ease;
     }
 
     .btn-print:hover {
-      transform: scale(1.05);
+      transform: scale(1.03);
     }
 
     @media print {
       body {
         background: white;
         color: black;
+        padding: 0;
       }
+      .nav-bar, .print-actions, .toggle-bar { display: none !important; }
       .poster-card {
         border-color: #047857;
         background: white;
         color: black;
         box-shadow: none;
+        max-width: 100%;
+        width: 100%;
       }
       h1 { color: #0F172A; text-shadow: none; }
       p.subtitle { color: #475569; }
-      .print-actions { display: none; }
       .step-box { border-color: #CBD5E1; background: #F8FAFC; color: black; }
+      .url-badge { border-color: #0284C7; color: #0369A1; background: #F0F9FF; }
     }
   </style>
 </head>
 <body>
+
+  <div class="nav-bar">
+    <div style="font-weight: 900; color: #FFD000; font-size: 1.1rem;">✨ 亮亮精靈護眼平台</div>
+    <div class="nav-links">
+      <a href="index.html" class="nav-btn">🎬 冒險動畫與互動</a>
+      <a href="learning_quiz.html" class="nav-btn">📝 小勇士闖關大測驗</a>
+      <a href="teacher_dashboard.html" class="nav-btn">🏫 教師/家長專區</a>
+      <a href="classroom_poster.html" class="nav-btn active">📲 學生掃碼</a>
+    </div>
+  </div>
 
   <div class="poster-card">
     <div class="header-tag">✨ 兒童護眼互動體驗平台</div>
@@ -176,25 +237,25 @@
     </div>
 
     <div>
-      <div class="url-badge" id="display-url">連線網址：載入中...</div>
+      <div class="url-badge" id="display-url">連線網址：https://ciaolinho-lab.github.io/eye-adventure/</div>
     </div>
 
-    <div style="margin-top: 10px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
-      <button class="btn-print" style="background: #0284C7; font-size: 0.95rem; padding: 8px 18px;" onclick="switchQR('cloud')">🌐 雲端正式版 QR</button>
-      <button class="btn-print" style="background: #059669; font-size: 0.95rem; padding: 8px 18px;" onclick="switchQR('lan')">📡 課堂區網版 QR</button>
-      <button class="btn-print" style="background: #8B5CF6; font-size: 0.95rem; padding: 8px 18px;" onclick="copyCurrentUrl()">📋 複製網址</button>
+    <div class="toggle-bar" style="margin-top: 8px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+      <button class="btn-print" style="background: #0284C7; font-size: 0.9rem; padding: 8px 16px;" onclick="switchQR('cloud')">🌐 雲端 Pages QR</button>
+      <button class="btn-print" style="background: #059669; font-size: 0.9rem; padding: 8px 16px;" onclick="switchQR('lan')">📡 課堂區網 QR</button>
+      <button class="btn-print" style="background: #8B5CF6; font-size: 0.9rem; padding: 8px 16px;" onclick="copyCurrentUrl()">📋 複製連線網址</button>
     </div>
 
     <div class="instructions-grid">
       <div class="step-box">
         <div class="step-num">1</div>
         <div style="font-weight:700;">開啟相機</div>
-        <div style="font-size:0.85rem; color:#94A3B8; margin-top:4px;">打開平板/手機內建相機或 LINE 掃碼器</div>
+        <div style="font-size:0.85rem; color:#94A3B8; margin-top:4px;">開啟手機/平板內建相機或 LINE 掃碼</div>
       </div>
       <div class="step-box">
         <div class="step-num">2</div>
         <div style="font-weight:700;">對準 QR Code</div>
-        <div style="font-size:0.85rem; color:#94A3B8; margin-top:4px;">點擊出現的網址連結彈窗</div>
+        <div style="font-size:0.85rem; color:#94A3B8; margin-top:4px;">點擊出現的連結彈窗或網址卡片</div>
       </div>
       <div class="step-box">
         <div class="step-num">3</div>
@@ -204,14 +265,17 @@
     </div>
 
     <div class="print-actions">
-      <button class="btn-print" onclick="window.print()">🖨️ 列印課堂海報 (Ctrl+P)</button>
+      <button class="btn-print" onclick="window.print()">🖨️ 列印 A4 海報 (Ctrl+P)</button>
       <button class="btn-print" style="background:#3B82F6;" onclick="window.location.href='teacher_dashboard.html'">🔙 返回教師管理區</button>
     </div>
   </div>
 
   <script>
     function updateUrlDisplay() {
-      const currentUrl = window.location.href.replace('classroom_poster.html', 'index.html');
+      let currentUrl = window.location.href.replace('classroom_poster.html', 'index.html');
+      if (location.hostname.includes('github.io')) {
+        currentUrl = 'https://ciaolinho-lab.github.io/eye-adventure/';
+      }
       document.getElementById('display-url').innerText = `連線網址：${currentUrl}`;
     }
 
@@ -227,16 +291,15 @@
     }
 
     function copyCurrentUrl() {
-      const currentUrl = window.location.href.replace('classroom_poster.html', 'index.html');
+      const currentUrl = document.getElementById('display-url').innerText.replace('連線網址：', '');
       navigator.clipboard.writeText(currentUrl).then(() => {
-        alert('✅ 網址已複製到剪貼簿！');
+        alert('✅ 網址已成功複製到剪貼簿！');
       }).catch(() => {
-        prompt('請手動複製此網址：', currentUrl);
+        prompt('請手動複製網址：', currentUrl);
       });
     }
 
     window.addEventListener('DOMContentLoaded', updateUrlDisplay);
   </script>
-
 </body>
 </html>
